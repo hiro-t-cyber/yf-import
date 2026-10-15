@@ -8,11 +8,17 @@ async function getYahooQuote(
   symbol: string,
   fetchTimeoutMs: number,
 ): Promise<number | null> {
-  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}`;
+
+  // Yahoo のキャッシュ回避用のダミー値
+  const nocache = Date.now();
+
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?nocache=${nocache}`;
 
   const response = await fetch(url, {
     headers: {
-      "User-Agent": "Mozilla/5.0",
+      // 本物のブラウザに近い UA にする
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0 Safari/537.36",
     },
     signal: AbortSignal.timeout(fetchTimeoutMs),
   });
